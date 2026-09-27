@@ -1,0 +1,44 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Git SHA to roll back to (e.g. abc1234)"
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy previous image
+        run: |
+          echo "Rolling back to: ${{ inputs.image_tag }}"
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition myapp \
+            --query taskDefinition > task-def.json
+
+      - name: Update image to rollback version
+        run: |
+          jq --arg IMG "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/myapp:${{ inputs.image_tag }}" \
+            '.containerDefinitions[0].image = $IMG' task-def.json > updated-task-def.json
+
+      - name: Register new task definition
+        run: |
+          aws ecs register-task-definition --cli-input-json file://updated-task-def.json
+
+      - name: Deploy previous version
+        run: |
+          aws ecs update-service \
+            --cluster production-cluster \
+            --service myapp-service \
+            --task-definition myapp \
+            --force-new-deployment
