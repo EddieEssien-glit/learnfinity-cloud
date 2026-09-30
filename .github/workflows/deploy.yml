@@ -7,8 +7,8 @@ on:
 permissions:
   id-token: write   # Required for OIDC
   contents: read
-  env:
-    ECR_REPOSITORY: learnfinity-cloud
+env:
+  ECR_REPOSITORY: learnfinity-cloud
 
 jobs:
   # ── Job 1: Test ────────────────────────────────────────────
