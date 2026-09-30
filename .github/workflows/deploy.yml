@@ -7,8 +7,6 @@ on:
 permissions:
   id-token: write   # Required for OIDC
   contents: read
-env:
-  ECR_REPOSITORY: learnfinity-cloud
 
 jobs:
   # ── Job 1: Test ────────────────────────────────────────────
@@ -56,8 +54,6 @@ jobs:
 
       - name: Build Docker image
         id: meta
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           SHA=$(echo ${{ github.sha }} | cut -c1-7)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
