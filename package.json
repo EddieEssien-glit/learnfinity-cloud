@@ -1,0 +1,25 @@
+{
+  "name": "learnfinity-cloud",
+  "version": "1.0.0",
+  "description": "My Cloud &amp; DevOps learning repository",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test",
+    "lint": "node --check index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EddieEssien-glit/learnfinity-cloud.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EddieEssien-glit/learnfinity-cloud/issues"
+  },
+  "homepage": "https://github.com/EddieEssien-glit/learnfinity-cloud#readme"
+}
